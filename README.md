@@ -168,25 +168,21 @@ The project does not currently redistribute the raw source datasets.
 
 ## Project Outputs
 
-- Jupyter notebook containing the analytical workflow
-- Full research paper
+- [**Jupyter Notebook — Full Analytical Workflow**](notebooks/what-are-the-fundamental-attributes-of-player-performance-in-football.ipynb)
+- [**Research Paper — Full PDF**](paper/what-are-the-fundamental-attributes-of-player-performance-in-football.pdf)
 - Player-level performance profiles
 - 673-player radar-chart atlas
 - Portfolio case study
 
-## Tools
+## Repository Structure
 
-- Python
-- pandas
-- NumPy
-- scikit-learn
-- PCA
-- Promax rotation
-- Bootstrap analysis
-- Jupyter Notebook
-
-## Author
-
-**David Lopez**
-
-M.S. Data Science, New York University
+```text
+fundamental-football-attributes/
+│
+├── notebooks/
+│   └── what-are-the-fundamental-attributes-of-player-performance-in-football.ipynb
+│
+├── paper/
+│   └── what-are-the-fundamental-attributes-of-player-performance-in-football.pdf
+│
+└── README.md
