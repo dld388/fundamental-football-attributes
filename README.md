@@ -2,39 +2,191 @@
 
 ## Short Answer
 
-The data suggests four robust dimensions of player performance:
-ball distribution and possession, finishing and goal threat,
-chance creation and crossing, and ground-duel and ball-carrying
-involvement.
+Using 74 standardized performance variables from 673 outfield players at the 2026 World Cup, the analysis identifies five interpretable dimensions of player performance:
 
-Evidence for a fifth dimension appears, but it is substantially
-less stable.
+1. **Direct Engagement**
+2. **Build-Up Involvement**
+3. **Finishing Output**
+4. **Creation**
+5. **Attacking Box Presence**
+
+The first four dimensions have the strongest statistical support. The fifth adds a useful distinction between attacking-box activity and realized finishing output, but its evidence is comparatively weaker.
 
 ## Project Overview
 
-Football players are usually described with familiar labels: passers, finishers, creators, ball carriers, defenders. But those categories are often imposed before looking at the data. This project asks a more fundamental question: if we start only with player-performance data, what underlying attributes of football emerge naturally? Rather than assuming in advance what the important dimensions should be, the objective was to let the relationships among performance statistics reveal the structure themselves.
+Football players are usually described through familiar positions and archetypes: passers, finishers, creators, ball carriers, and defenders. Those categories are useful, but they are generally defined before the data is examined.
 
-To investigate that question, I built a reconciled player-level dataset from multiple sources covering outfield players at the 2026 World Cup. The pipeline required resolving player and team identities across sources, validating unmatched and duplicate records, converting appropriate counting statistics to per-90 rates, removing goalkeeper-specific information, and separating actual performance measures from metadata and exposure variables. After cleaning, the dimensional analysis operated on 74 performance variables.
+This project takes the opposite approach.
 
-I did not want the conclusion to depend on a single dimensionality-reduction algorithm. Classical PCA was first used as an unconstrained benchmark, followed by Sparse PCA to produce cleaner and more interpretable loading structures. I then tested Nonnegative PCA, which imposes a very different assumption by requiring component loadings to be positive. The point was not simply to find the model that produced the most attractive football interpretation, but to ask whether similar underlying concepts would survive substantially different mathematical representations of the same data.
+Rather than deciding in advance what kinds of players should exist, I asked whether recurring dimensions of performance could emerge directly from the relationships among observed football statistics.
 
-Across those approaches, four major dimensions repeatedly emerged. One captured ball distribution and possession involvement, driven by passing volume, completions, touches, and related measures. Another represented finishing and goal threat, including goals, shots on target, conversion, and shooting output. A third reflected chance creation and crossing, while a fourth captured ground-duel, ball-carrying, and direct involvement. The ordering of the components differed between methods, but the football concepts themselves repeatedly appeared.
+The analysis uses player-level data from **FBref, Squawka, and SofaScore** covering the 2026 World Cup. After reconciling player identities across sources, adjusting appropriate counting statistics to per-90 rates, applying a minimum playing-time threshold, and conducting robust outlier screening, the final analytical sample contained:
 
-The analysis also produced evidence for a fifth dimension, but this is where statistical validation became especially important. Under Nonnegative PCA, the additional component clearly represented aerial and defensive-duel activity, with strong contributions from aerial duels, clearances, and last-man tackles. However, bootstrap resampling showed that this fifth component was far less reproducible than the first four. The project therefore makes an important distinction between finding an interpretable pattern in one dataset and having enough evidence to treat that pattern as a stable underlying dimension.
+- **673 outfield players**
+- **48 national teams**
+- **74 standardized performance variables**
 
-Ultimately, Sparse PCA provided the strongest overall representation, balancing statistical structure, sparsity, interpretability, and stability. More importantly, several Sparse PCA dimensions were independently reproduced by Nonnegative PCA despite the methods imposing very different constraints: three component pairs achieved Tucker congruence values of .9803, .9548, and .9347. That cross-method agreement provides evidence that the major dimensions are not simply artifacts of one modeling choice. The broader conclusion is that player performance appears to have a relatively compact underlying structure, centered most strongly on distribution, finishing, chance creation, and ground-duel/carrying involvement.
+Player names, teams, ages, and positional labels were excluded from the PCA feature matrix.
 
-## Methods
+## Methodology
 
-- Classical PCA
-- Sparse PCA
-- Nonnegative PCA
-- Bootstrap stability analysis
-- Tucker coefficient of congruence
+The final analysis uses **classical Principal Component Analysis (PCA)** followed by **oblique Promax rotation**.
 
-## Outputs
+Choosing the number of dimensions was treated as a model-selection problem rather than relying on a single statistical rule.
 
+Retention evidence included:
+
+- Scree analysis
+- Horn parallel analysis
+- Original and revised MAP criteria
+- Bootstrap component stability
+- Principal-angle subspace stability
+- Pattern-loading structure
+- Cross-loadings
+- Football interpretability
+
+Because these diagnostics did not all recommend the same dimensionality, four-, five-, and six-component solutions were compared directly.
+
+### Four Components
+
+- **40.87%** of variance retained
+- 47 variables with one salient loading
+- 10 cross-loading variables
+
+The solution was parsimonious, but it combined realized finishing with shooting and attacking-box activity.
+
+### Five Components — Selected
+
+- **44.56%** of variance retained
+- 50 variables with one salient loading
+- 10 cross-loading variables
+
+The fifth component separated **Finishing Output** from **Attacking Box Presence**, producing a clearer distinction between converting chances and repeatedly reaching shooting situations.
+
+### Six Components
+
+- **47.77%** of variance retained
+- 49 variables with one salient loading
+- 15 cross-loading variables
+
+The additional component increased complexity, produced more cross-loadings, and was supported by a comparatively narrow group of variables.
+
+The five-component solution therefore provided the best balance between statistical structure, interpretability, and parsimony.
+
+## The Five Performance Dimensions
+
+### 1. Direct Engagement
+
+Captures repeated direct interactions and contests with opponents.
+
+Strong defining variables include:
+
+- Ground duels contested
+- Ground duels won
+- Take-ons completed
+- Tackles and other direct interaction measures
+
+This dimension refers to active engagement with opponents. It should not be interpreted as physical speed or athleticism.
+
+### 2. Build-Up Involvement
+
+Represents sustained involvement in possession circulation and progression.
+
+Strong defining variables include:
+
+- Pass attempts
+- Open-play passes
+- Passes completed
+- Touches and related passing activity
+
+### 3. Finishing Output
+
+Captures realized scoring production rather than simple shooting volume.
+
+Strong defining variables include:
+
+- Goals
+- Non-penalty goals
+- Goals from inside the box
+- Conversion rate
+
+### 4. Creation
+
+Represents chance creation with a particularly strong crossing component.
+
+Strong defining variables include:
+
+- Crosses completed
+- Crosses attempted
+- Open-play crosses completed
+- Chances created
+
+### 5. Attacking Box Presence
+
+Captures repeated involvement in dangerous attacking areas and shooting situations.
+
+Strong defining variables include:
+
+- Touches in the opposition box
+- Shots excluding blocks
+- Shots off target
+- Big chances missed
+
+This dimension is particularly useful because it separates **getting into shooting situations** from **actually converting them into goals**.
+
+## An Unexpected Finding
+
+A single, distinct defensive dimension did not emerge.
+
+Defensive actions such as tackles, interceptions, clearances, and fouls were distributed across multiple dimensions rather than clustering into one unified defensive axis.
+
+This does **not** imply that defense is unimportant.
+
+One possible explanation is that conventional event statistics capture visible defensive actions more easily than off-ball positioning, maintaining team shape, closing passing lanes, and preventing opportunities before a recorded event occurs.
+
+## Interpretation
+
+These dimensions should not be interpreted as:
+
+- Five independent football skills
+- Player ratings
+- Positional rankings
+- Measures of overall player quality
+- Universal dimensions that must exist in every football dataset
+
+They describe **relative multivariate patterns of performance expression** within this tournament, measurement system, and reference population.
+
+## Data Sources
+
+Player-performance data were compiled from:
+
+- FBref
+- Squawka
+- SofaScore
+
+The project does not currently redistribute the raw source datasets.
+
+## Project Outputs
+
+- Jupyter notebook containing the analytical workflow
+- Full research paper
+- Player-level performance profiles
+- 673-player radar-chart atlas
 - Portfolio case study
-- Jupyter notebook
-- Research paper
-- Figures and supporting artifacts
+
+## Tools
+
+- Python
+- pandas
+- NumPy
+- scikit-learn
+- PCA
+- Promax rotation
+- Bootstrap analysis
+- Jupyter Notebook
+
+## Author
+
+**David Lopez**
+
+M.S. Data Science, New York University
